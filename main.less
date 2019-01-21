@@ -1,0 +1,182 @@
+//importing files
+@import "importedVariables"; // variables used in next imported files.
+@import "importingRules";
+
+@bg-col: rgba(88, 81, 10, 0.452);
+@grass-col: #0b680b;
+@nav-bg-col: #333;
+@btn-bg-col: #006699;
+@btn-col: #fff;
+@btn-padding: 5px;
+@primary-color: #66a8c9;
+@secondary-color: #69eebb;
+
+// This is awesome - comment Not present in CSS
+/* This is awesome - comment PRESENT in CSS*/
+body {
+    background-color: @bg-col;
+}
+
+h1 {
+    color: @grass-col;
+    font-family: Tahoma, sans-serif;
+}
+
+p {
+    color: @grass-col;
+}
+
+// Creating mixins
+/* Using mixins */
+.panel {
+    border: 3px solid dodgerblue;
+    background-color: lighten(@grass-col, 65%);
+    margin: 10px;
+}
+
+.little-panel {
+    .panel; // include the .panel mixin - basically inherits
+    font-size: 12px;
+    padding: 5px;
+}
+
+.big-panel {
+    .panel; // include the .panel mixin - basically inherits
+    font-size: 32px;
+    padding: 20px;
+}
+
+//Parametered mixins
+.border-radius(@radius) {
+    border-radius: @radius;
+}
+
+// Extend classes (rules)
+/* Using extend() & using parametered mixin. */
+.card {
+    border: 1px solid black;
+    // border-radius: 5px; -- replaced with parameterd mixin.
+    height: 50px;
+    width: 100px;
+}
+
+.card-primary:extend(.card) {
+    background-color: @primary-color;
+    .border-radius(10px);
+}
+
+.card-secondary:extend(.card) {
+    background-color: @secondary-color;
+    .border-radius(5px);
+}
+
+
+
+// Nested Rules
+/* Nested Rules */
+#side-nav {
+    background-color: @nav-bg-col;
+    float: left;
+    margin-right: 20px;
+
+    a:link,
+    a:visited {
+        color: white;
+        display: block; // side nav, for top nav use inline-block
+        padding: 8px;
+        text-decoration: none;
+    }
+
+    a:hover {
+        background-color: lighten(@nav-bg-col, 50%);
+        color: black;
+    }
+}
+
+// Nested Conditionals
+// Using media queries
+#welcome-banner {
+    font-size: 32px;
+    line-height: 32px;
+    background-color: @grass-col;
+    color: black;
+    padding: 50px 20px;
+    text-align: center;
+
+    /* Only on small screen devices */
+    // This is showing an error but it actually works.
+    @media screen {
+        @media (max-width: 768px) {
+            font-size: 18px;
+            line-height: 18px;
+            background-color: lighten(@grass-col, 40%);
+            color: darken(@grass-col, 50%);
+            text-align: left;
+        }
+    }
+}
+
+// Simple mathematical operations
+
+.btn {
+    background-color: @btn-bg-col;
+    color: @btn-col;
+    padding: @btn-padding;
+    display: inline-block;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-jumbo {
+    .btn;
+    padding: @btn-padding + 30;
+    border-radius: 4px * 10;
+}
+
+.btn-light {
+    .btn;
+    background-color: @btn-bg-col * 1.8; // increasing the numbers is closer to white, thus lighter.
+    padding: @btn-padding * 2;
+}
+
+// File Paths
+
+@images: "images/";
+@homepage-images: "images/homepage/";
+
+#image-one {
+    height: 500px;
+    width: 800px;
+    margin-bottom: 10px;
+    background: url("@{images}filename1.jpg");
+}
+
+#image-two {
+    height: 500px;
+    width: 800px;
+    margin-bottom: 10px;
+    background: url("@{homepage-images}filename2.jpg");
+}
+
+// Conditional mixins using when
+/* When Conditionals in mixins */
+.text-auto-color(@col) when (lightness(@col) >= 50%) {
+    color: black;
+}
+.text-auto-color(@col) when (lightness(@col) < 50%) {
+    color: white;
+}
+
+.auto-color {
+    font-size: 24px;
+    padding: 10px;
+}
+.auto-color-light:extend(.auto-color) {
+    background-color: lighten(@bg-col, 80%);
+    .text-auto-color(lighten(@bg-col, 80%)); // pass in color of background
+}
+.auto-color-dark:extend(.auto-color) {
+    background-color: darken(@bg-col, 80%);
+    .text-auto-color(darken(@bg-col, 80%)); // pass in color of background
+}
